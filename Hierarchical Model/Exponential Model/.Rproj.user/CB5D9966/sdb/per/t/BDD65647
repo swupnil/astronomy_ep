@@ -1,0 +1,17 @@
+{
+    "contents" : "require(\"rstan\")\n\n#  ..... Compile Stan Code .....\nmodel2_fit <- stan_model(model_code = model2_code, model_name = \"Model 2\");\n\n# ...... Simulate the Data ......\nJ = 50;\nN = 1000;\nsub_data2 <- model2_sim(phi = c(200, log(5)), J = J, n.samp = N);\n\n#  ..... Priors .....\npri_mu_cav <- c(0, 0);\npri_sig_cav <- matrix(c(400, 0, 0, 1), nrow = 2, ncol = 2);\ninit_data <- list();\nfor(i in 1:4) { init_data[[i]] <- list(phi = pri_mu_cav, theta = rep(0, J));}\n\n# ...... EP Fit .......\n# 125.2 seconds with K = 5\n# 87.7 seconds with K = 10\n# 75.4 seconds with K = 25\n# 700 seconds with K = 5; strong prior\n# 292 seconds with K = 10; strong prior\n# 238  seconds with K = 25; strong prior\nmodel2_EP_fit <- EP(fit = model2_fit, J = J, K = 25, data = sub_data2, S = 3, mc_iter = 1000, prior.Mu = pri_mu_cav, parallel = TRUE);\nmodel2_EP_fit\n\n# ...... MC Fit ....... \n# 1137 seconds\n# 937.08 seconds; strong prior\ndata <- list(N = N*J, B = J, y = sub_data2$y, bin = sub_data2$bin, Mu_Cav = pri_mu_cav, Sig_Cav = pri_sig_cav);\nsystem.time(model2_MC_fit <- sampling(model2_fit, data = data, iter = 1000, chains = 4, init_data = init_data));\nmodel2_MC_fit\n\n",
+    "created" : 1438201603560.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "806303585",
+    "id" : "BDD65647",
+    "lastKnownWriteTime" : 1438880914,
+    "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/School/Columbia/Research/Astronomy/Hierarchical Model/EP_Test/Model2_Test.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

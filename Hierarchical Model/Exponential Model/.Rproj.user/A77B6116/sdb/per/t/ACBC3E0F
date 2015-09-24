@@ -1,0 +1,16 @@
+{
+    "contents" : "# plot 1-6 degree polynomials for a particular bin\npoly.plot(90, 12)\n\n# plot 4th degree fit in a particular bin and alvin's plots over\ncomparison.plotter(150)\ncomparison.plotter(270)\ncomparison.plotter(90)\ncomparison.plotter(30)\n\n# plot all simulation curves with particular bin's data overlayed\noverlay.plotter(30, \"down\")\noverlay.plotter(150, \"up\")\noverlay.plotter(30, \"down\", log = F)\noverlay.plotter(150, \"up\", log = F)\noverlay.plotter(300, \"up\", log = F)\n\n# fit third degree polynomial to each simulation bin\npar(mfrow=c(3,3))\nfor(i in 350:359){\n  sim.fitter(degrees = i, inc = 1, P = 7)\n}\n\n# fifth degree works well except for 15-84\n# dip around 50 in simulations..\n\n# try to discover some good initial values\npoly.fitter(150, .1, P=4)\na = c(180, 350, 5, .5, 30, 7, 0, 40, .5)\nlines((0:500)/10,exp.curve((0:500)/10,a), col =\"red\")\na = c(100, 300, 5, .01, 30, 7, 1.8, 11, 5)\nlines((0:500)/10,exp.curve2((0:500)/10,a), col =\"red\")\n\npoly.fitter(270, .1, P=4)\na = c(180, 750, 5, .5, 50, 20, 1, 55, .5)\nlines((0:500)/10,exp.curve((0:500)/10,a), col =\"red\")\na = c(150, 750, 2, .1, 40, 20, 3.2, 12, 5)\nlines((0:500)/10,exp.curve2((0:500)/10,a), col =\"red\")\n\n# compile code in stan for exp model\nexp.fit <- stan_model(model_code = exp_code, model_name = \"Exp Fit\");\nexp.fit.normal <- stan_model(model_code = exp_code_normal, model_name = \"Exp Fit\");\n\n# fit the exponential model and plot the result overlayed\npar(mfrow=c(2,3))\npri.mu <- c(180, 650, 5, .5, 30, 7, 1, 40, .5)\npri.sig <- sqrt(pri.mu)*2\ntheta <- c(25, 50, 75, 100, 125, 150)\n\n#uniform prior\ntest <- list()\npri.mu <- c(200, 250, 5, .5, 40, 7, 1, 50, .5)\npri.sig <- c(70, 70, 2, 2, 15, 5, 1, 15, 2)*2\npar(mfrow=c(2,3))\nfor(i in 1:6){\n  test[[i]] <- exp.fitter(degrees = theta[i], inc = .1, fit = exp.fit, mu = pri.mu, sig = pri.sig)\n}\nfor(i in 1:6){\n  test[[i+6]] <- exp.fitter(degrees = theta[i]+150, inc = .1, fit = exp.fit, mu = pri.mu, sig = pri.sig)\n}\n\n#normal prior\ntest2 <- list()\npri.mu <- log(c(200, 250, 5, .5, 50, 7, 1, 50, .5))\npri.sig <- log(c(1.6, 1.6, 1.3, 1.3, 1.15, 1.2, 1.4, 1.15, 1.4))\npar(mfrow=c(2,3))\nfor(i in 1:6){\n  test2[[i]] <- exp.fitter(degrees = theta[i], inc = .1, fit = exp.fit.normal, is.log = TRUE, mu = pri.mu, sig = pri.sig)\n}\nfor(i in 1:6){\n  test2[[i+6]] <- exp.fitter(degrees = theta[i]+150, inc = .1, fit = exp.fit.normal, is.log = TRUE, mu = pri.mu, sig = pri.sig)\n}\n",
+    "created" : 1429198713308.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1011099960",
+    "id" : "ACBC3E0F",
+    "lastKnownWriteTime" : 1429233743,
+    "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/School/Columbia/Research/Astronomy/Hierarchical Model/Complex/Experimentation.R",
+    "project_path" : "Experimentation.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

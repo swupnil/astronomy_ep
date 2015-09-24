@@ -1,0 +1,16 @@
+{
+    "contents" : "exp.fitter <- function(degrees = 150, inc = 1, bin.factor = 1, is.log = FALSE, fit = exp.fit, x = i100[i100*FUV>0], y = FUV[i100*FUV>0], z = long[i100*FUV>0], mu = rep(1,9), sig = rep(1,9)){\n  x <- x[z < degrees + inc & z >= degrees];\n  y <- y[z < degrees + inc & z >= degrees];\n  \n  exp.data <- list(N = length(x), x = x, y = y, priorMu = mu, priorSig = sig);\n  init.data <- list();\n  if (is.log){\n    for(i in 1:4) { init.data[[i]] <- list(log_a = mu, log_sigma = 5.3);}\n    model.fit <- sampling(fit, data = exp.data, iter = 100, chains = 4, init = init.data);\n    a <- colMeans(extract(model.fit)$a);\n  } else {\n    for(i in 1:4) { init.data[[i]] <- list(a = mu, sigma = 200);}\n    model.fit <- sampling(fit, data = exp.data, iter = 100, chains = 4, init = init.data);\n    a <- colMeans(extract(model.fit)$a);\n  }\n  \n  xax <- c(0:(max(x)*100))/100;\n  fitted <- rep(a[1], length(xax));\n  fitted <- fitted + a[2]*a[3]*(1-exp(-xax/a[3])-a[4]*exp(-.5*((xax-a[5])/a[6])^2));\n  fitted <- fitted + a[7]*a[9]*log(1+exp((xax-a[8])/a[9]));\n  \n  \n  degrees <- degrees / bin.factor;\n  plot(x, y, xlab = \"i100\", ylab = \"FUV\", main = bquote(theta == .(degrees) *degree ~ \"-\" ~ .(degrees+inc) *degree), cex = 1, bty = \"l\", col = \"gray\");\n  lines(xax, fitted, col = 1, lwd = log(length(x))/2, lty = 1);\n\n  return (model.fit)\n}\n\ninv.logit <- function(x){ return(exp(x)/(1+exp(x))) }\n\nexp.curve = function(x = 2, a) {\n  result = a[1] + a[2]*a[3]*(1-exp(-x/(a[3]))-a[4]*exp(-.5*((x-a[5])/a[6])^2)) + a[7]*a[9]*x*log(1+exp((x-a[8])/a[9]))\n  return(result)\n}\n\nexp.curve2 = function(x = 2, a) {\n  result = a[1] + a[2]*a[3]*(-a[4]*exp(-.5*((x-a[5])/a[6])^2)+a[7]*exp(-.5*((x-a[8])/a[9])^2))\n  return(result)\n}\n",
+    "created" : 1429229622445.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3260859755",
+    "id" : "43814DC4",
+    "lastKnownWriteTime" : 1429231304,
+    "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/School/Columbia/Research/Astronomy/Hierarchical Model/Complex/Exp_Fitter.R",
+    "project_path" : "Exp_Fitter.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

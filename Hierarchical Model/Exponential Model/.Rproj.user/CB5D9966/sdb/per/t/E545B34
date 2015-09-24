@@ -1,0 +1,17 @@
+{
+    "contents" : "require(\"rstan\")\n\n#  ..... Compile Stan Code .....\nmodel0_fit <- stan_model(model_code = model0_code, model_name = \"Model 0\");\n\n# ...... Simulate the Data ......\nsub_data0 <- model0_sim(phi = 200, n.samp = 1000);\n\n#  ..... Priors .....\npri_mu_cav <- 0;\ninit_data <- list();\nfor(i in 1:4) { init_data[[i]] <- list(phi = pri_mu_cav);}\n\n# ...... EP Fit .......\nmodel0_EP_fit <- Model0_EP(fit = model0_fit, data = sub_data0, S = 4, prior.Mu = pri_mu_cav, prior.Sig = 20, parallel = TRUE);\nmodel0_EP_fit\n\n# ...... MC Fit .......\ndata <- list(N = length(sub_data0$y), y = sub_data0$y, Mu_Cav = pri_mu_cav, Sig_Cav = 20);\nsystem.time(model0_MC_fit <- sampling(model0_fit, data = data, iter = 100, chains = 4, init_data = init_data));\nmean(extract(model0_MC_fit)$phi)\n\n",
+    "created" : 1438749605468.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3454771105",
+    "id" : "E545B34",
+    "lastKnownWriteTime" : 1438749658,
+    "path" : "~/Library/Mobile Documents/com~apple~CloudDocs/School/Columbia/Research/Astronomy/Hierarchical Model/EP_Test/Model0_Test.R",
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

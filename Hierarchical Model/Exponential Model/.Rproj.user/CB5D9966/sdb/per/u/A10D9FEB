@@ -1,0 +1,17 @@
+{
+    "contents" : "i <- sample(rep(c(0,1),50), 100, replace = F)\nt <- sample(rep(c(0,1),50), 100, replace = F)\nit <- i * t\ny <- 5 + 3 * i - 4 * t + 1 * it + rnorm(100, 0, 1)\n\nsummary(lm(y~i +t + it))\nsummary(lm(y[t==0] ~ i[t==0]))\nlm(y[t==1] ~ i[t==1])\n",
+    "created" : 1440361839139.000,
+    "dirty" : true,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "959800258",
+    "id" : "A10D9FEB",
+    "lastKnownWriteTime" : 4432402144,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

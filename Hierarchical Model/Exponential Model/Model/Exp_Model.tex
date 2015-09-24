@@ -1,0 +1,53 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb,amsmath,graphicx,mathtools}
+\usepackage{listings}
+\usepackage[margin=0.75in]{geometry}
+\parindent 16 pt
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead[R]{Swupnil Sahai}
+\fancyhead[L]{}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+\begin{document}
+
+% CUSTOM SHORTCUTS
+
+\def\ci{\perp\!\!\!\perp}
+\def\ex{\mathbb{E}}
+\def\prob{\mathbb{P}}
+\def\ind{\mathbb{I}}
+\def\grad{\triangledown}
+\def\bigo{\mathcal{O}}
+
+\section{Exponential Model}
+
+$$ \ex(y|x) = a_0 + a_1 a_2 \biggl(1-\exp\{-x/a_2\}-a_3 \cdot \exp\biggl\{-\frac{1}{2}\biggl(\frac{x-a_4}{a_5}\biggr)^2\biggr\} \biggr) + a_6 a_8x  \log\biggl(1+\exp\biggl\{\frac{x-x_7}{a_8} \biggr\}\biggr) $$
+\begin{itemize}
+\item $a_0 =$ approximate value of $E(y|x)$ at $x=0$
+\item $a_1 =$ approximate slope of the curve near $x=0$
+\item $a_2 =$ scale (in dimensions of $x$) of the concavity of the curve near $0$
+\item $a_3 =$ minimum magnitude (in proportion of $y$) of the dip that occurs at the mid-high range of $x$
+\item $a_4 =$ approximate center of the dip that occurs at the mid-high range of $x$
+\item $a_5 =$ scale (in dimensions of $x$) of the dip that occurs at the mid-high range of $x$
+\item $a_6 =$ slope of the curve in the limit of high values of $x$
+\item $a_7 =$ position of the approximate 'knot' where the shape of the curve changes
+\item $a_8 =$ scale (in dimensions of $x$) of how fast the slope changes
+\end{itemize}
+
+\section{S-Curve Improvement}
+
+$$ \ex(y|x) = a_0 + logit^{-1}\biggl(\frac{x-a_1}{a_2}\biggr) \cdot a_3 \cdot a_4 \cdot \biggl(1-\exp\{-x/a_4\}-a_5 \cdot \exp\biggl\{-\frac{1}{2}\biggl(\frac{x-a_6}{a_7}\biggr)^2\biggr\} \biggr) \hspace{50 pt}$$
+\begin{itemize}
+\item $a_0 =$ approximate value of $E(y|x)$ at $x=0$
+\item $a_1 =$ approximate inflection point of S-curve
+\item $a_2 =$ approximate scale of S-curve at inflection point
+\item $a_3 =$ approximate slope of S-curve at inflection point
+\item $a_4 =$ scale (in dimensions of $x$) of S-curve at inflection point
+\item $a_5 =$ minimum magnitude (in proportion of $y$) of the dip that occurs at the mid-high range of $x$
+\item $a_6 =$ approximate center of the dip that occurs at the mid-high range of $x$
+\item $a_7 =$ scale (in dimensions of $x$) of the dip that occurs at the mid-high range of $x$
+\end{itemize}
+
+\end{document}
