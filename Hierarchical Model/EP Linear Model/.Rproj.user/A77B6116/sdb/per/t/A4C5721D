@@ -1,0 +1,16 @@
+{
+    "contents" : "#MODEL\ntilt_code = '\n  data{\n    int<lower=1> N;\n    int<lower=1> M;\n    int<lower=1> B;\n    real<lower=0> x[N];\n    real y[N];\n    int<lower=1> bin[N];\n    vector[M] Mu_Cav;\n    matrix[M,M] Sig_Cav;\n  }\n  transformed data{\n    matrix[M,M] L;\n    L <- cholesky_decompose(Sig_Cav);\n  }\n  parameters{\n    vector[B] eta;\n    vector[M] phi;\n  }\n  transformed parameters{\n    vector[B] alpha;\n    real<lower=0, upper=positive_infinity()> mu;\n    real<lower=0, upper=positive_infinity()> tau;\n    real<lower=0, upper=positive_infinity()> sigma;\n    real<lower=0, upper=positive_infinity()> beta;\n    mu <- exp(phi[1]);\n    tau <- exp(phi[2]);\n    beta <- exp(phi[3]);\n    sigma <- exp(phi[4]);\n    alpha <- mu + tau*eta;\n  }\n  model{\n    vector[N] y_hat;\n    phi ~ multi_normal_cholesky(Mu_Cav,L);\n    eta ~ normal(0,1);\n    for(n in 1:N){\n      y_hat[n] <- alpha[bin[n]] + x[n]*beta;\n    }\n    y ~ normal(y_hat, sigma);\n  }\n'",
+    "created" : 1422734282270.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3747454533",
+    "id" : "A4C5721D",
+    "lastKnownWriteTime" : 1420227016,
+    "path" : "~/Dropbox/Documents/School/Columbia/Research/Astronomy/Hierarchical Model/Expectation Propagation/Stan_Code_Tilted.R",
+    "project_path" : "Stan_Code_Tilted.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
