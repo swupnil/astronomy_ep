@@ -63,7 +63,7 @@ EP = function(fit = NULL, data = NULL, J = 360, K = 6, prior.Mu = log(c(200, 250
       
       # Fit tilted distribution in Stan....
       #for(i in 1:4) { init.data[[i]] <- list(eta = matrix(0, nrow=P/2, ncol=J/K), phi = Mu.cav);}
-      for(i in 1:4) { init.data[[i]] <- list(theta = rep(0, B), phi = Mu.cav);}
+      for(i in 1:4) { init.data[[i]] <- list(beta0 = rep(0, B), beta1 = rep(0, B), phi = Mu.cav);}
       times[s,] <- times[s,] + system.time(tilt.fit <- sampling(fit, data = tilt.data, iter = mc_iter, chains = 4, init = init.data))[1:3];
     
       # Extract mean and covariance matrix....

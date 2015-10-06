@@ -16,7 +16,7 @@ model2_code = '
     vector[2] phi;
     vector[B] theta;
   }
-  transformed paramters {
+  transformed parameters {
     real<lower=0> sigma;
     sigma <- exp(phi[2]);
   }
