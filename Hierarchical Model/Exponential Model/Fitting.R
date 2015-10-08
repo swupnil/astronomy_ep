@@ -77,3 +77,18 @@ for(i in 0:359){
     dev.off()
   }
 }
+
+############################
+#### DETERMINE PRIORS ######
+############################
+fitted_a <- matrix(0, nrow = 360, ncol = 8);
+
+for(i in 0:359){
+  cat("Degrees: ",i,"\n")
+  current_data <- read.csv(paste("Output/ParamsBy0.1/",i,"-",i+0.1,".csv",sep=""));
+  fitted_a[i+1,] <- apply(current_data,2,median)[-1];
+}
+
+rm(current_data)
+colMeans(log(fitted_a))
+apply(log(fitted_a), 2, sd)

@@ -24,18 +24,6 @@ pri.mu.cav <- log(c(200, 2.5, 2.5, 250, 5, .5, 50, 7, 1.6, 1.5, 1.6, 1.6, 1.3, 1
 init.data <- list();
 for(i in 1:4) { init.data[[i]] <- list(eta = matrix(0, nrow=8, ncol=J), phi = pri.mu.cav);}
 
-#  ..... EP: Simulated Data .....
-sim.J = 72
-sim.sub.data <- astro.sim(phi = colMeans(extract(actual.fit)$phi), J = sim.J, n.samp = 200);
-
-simEP.fit <- astro.EP(fit = fit, data = sim.sub.data, J = sim.J, K = K, S = 2, prior.Mu = pri.mu.cav, SMOOTH = 0.3, parallel = TRUE);
-simEP.fit$Post.Mu
-# 14500 seconds, N = 14400, J = 72, K = 9, S = 4
-
-sim.data <- list(N = length(sim.sub.data$y), M = 17, B = sim.J, x = sim.sub.data$x, y = sim.sub.data$y, bin = sim.sub.data$bin, Mu_Cav = pri.mu.cav, Sig_Cav = diag(17) * 4);
-system.time(simMC.fit <- sampling(fit, data = sim.data, iter = 100, chains = 4, init = init.data));
-colMeans(extract(simMC.fit)$phi)
-
 #  ..... MCMC: Actual Data .....
 actual.data <- list(N = length(y), M = 17, B = J, x = sub.data$x, y = sub.data$y, bin = sub.data$bin, Mu_Cav = pri.mu.cav, Sig_Cav = diag(17) * 4);
 system.time(actual.fit <- sampling(fit, data = actual.data, iter = 100, chains = 4, init = init.data)); 

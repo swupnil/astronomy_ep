@@ -1,7 +1,7 @@
 ---
-title: "Simple EP"
+title: "EP Tests"
 author: "Swupnil Sahai"
-date: "September 22, 2015"
+date: "October 6, 2015"
 output: pdf_document
 ---
 
