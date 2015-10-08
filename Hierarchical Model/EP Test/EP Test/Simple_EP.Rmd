@@ -51,8 +51,9 @@ EP and HMC converge to same posterior of $\phi$, regardless of the number of sit
 Parameter & True & Prior & HMC & EP K=5 & EP K=10 & EP K=25 \\ [0.5ex] % inserts table %heading
 \hline \\
 $E(\phi_1)$ & 200 & 0 & 200.07 & 200.23 & 200.24 & 200.11\\
-$Var(\phi_1)$ & -- & 20 & 2.03 & 2.08 & 1.99 & 1.99\\
-Time & -- & -- & 201 s & 81 s & 73 s & 69 s\\ 
+$Var(\phi_1)$ & -- & 20 & 2.03 & 2.08 & 1.99 & 1.99\\ \hline
+Time (Serial) & -- & -- & 201 s & 81 s & 73 s & 69 s\\ 
+Time (Parallel) & -- & -- & 201 s & 16.2 s & 7.3 s & 2.8 s\\ 
 \hline
 \end{tabular}
 \label{table:nonlin}
@@ -114,8 +115,9 @@ $E(\phi_1)$ & 200 & 200 & 200.52 & 199.89 & 199.33 & 18.32 \\
 $SD(\phi_1)$ & -- & 100 & 0.64 & 0.56 & 0.52 & NA \\
 $E(\phi_2)$ & 1.61 & 0 & 1.51 & 1.50 & 1.45 & 5.13 \\
 $SD(\phi_2)$ & -- & 1 & 0.10 & 0.10 & 0.11 & NA \\
-$Cov(\phi_1,\phi_2)$ & -- & 0 & -0.0041 & -0.0088 & -0.0131 & 0.92 \\
-Time & -- & -- & 1137 s & 452 s & 467 s & 296 s\\ 
+$Cov(\phi_1,\phi_2)$ & -- & 0 & -0.0041 & -0.0088 & -0.0131 & 0.92 \\ \hline
+Time (Serial) & -- & -- & 1137 s & 452 s & 467 s & 296 s\\ 
+Time (Parallel) & -- & -- & 1137 s & 90.4 s & 46.7 s & 11.8 s\\
 \hline
 \end{tabular}
 \label{table:nonlin}
@@ -143,16 +145,13 @@ $Cov(\phi_1,\phi_2)$ & -- & 0 & -0.0041 & -0.0131 & -0.0335 & 0.0145 \\
 \pagebreak
 \section{4. Slope and Intercept ( + Hierarchical Mean and Variance for Slope and Intercept)}
 \subsection{Formulation}
-Finally we try a hierarchical linear model with local unknown slopes and intercepts drawn from global unknown slope/intercept mean and variance, as well as a global model variance:
+Now we try a hierarchical linear model with local unknown slopes and intercepts drawn from global unknown slope/intercept mean and variance, as well as a global model variance:
 $$ \alpha_j \sim N(\phi_1, e^{\phi_3})$$
 $$ \beta_j \sim N(\phi_2, e^{\phi_4})$$
 $$ x_{ij} \sim U(0,50)$$
 $$ y_{ij} \sim N(\alpha_j + \beta_j x_{ij}, e^{\phi_5}) $$
 
-Generating 50 $\alpha_j$ and $\beta_j$'s from $\phi_1 = -100, \phi_2 = 10, e^{\phi_3} = 5, e^{\phi_4} = 4,$ and $e^{\phi_5} = 20$, and then sampling 100 data points from each group $j$, we give EP and HMC the following priors:
-$$ \left[ \begin{array}{c} \phi_1 \\ \phi_2 \\ \phi_3 \\ \phi_4 \end{array} \right] 
-\sim N\biggl( \left[ \begin{array}{c} 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{array} \right], 
-\left[ \begin{array}{ccccc} 1000 & 0 & 0 & 0 & 0 \\ 0 & 1000 & 0 & 0 & 0 \\ 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0 & 2 & 0 \\ 0 & 0 & 0 & 0 & 2 \end{array} \right] \biggr)$$
+Generating 50 $\alpha_j$ and $\beta_j$'s from $\phi_1 = -100, \phi_2 = 10, e^{\phi_3} = 5, e^{\phi_4} = 4,$ and $e^{\phi_5} = 20$, we then sampling 100 data points from each group $j$.
 
 \subsection{Results}
 EP and HMC converge to same posterior of $\phi$ for a small number of sites. When using 25 sites, however, the posterior variance is quite larger.
@@ -165,16 +164,62 @@ EP and HMC converge to same posterior of $\phi$ for a small number of sites. Whe
 Parameter & True & Prior & HMC & EP K=5 & EP K=10 & EP K=25 \\ [0.5ex] % inserts table %heading
 \hline \\
 $E(\phi_1)$ & -100 & 0 & -98.7 & -99.2 & -99.3 & -99.2 \\
-$V(\phi_1)$ & -- & 1000 & 0.95 & 0.64 & 0.62 & 1.60 \\
+$SD(\phi_1)$ & -- & 1000 & 0.98 & 0.80 & 0.79 & 1.26 \\ \hline
 $E(\phi_2)$ & 10 & 0 & 9.64 & 9.49 & 9.54 & 10.18 \\
-$V(\phi_2)$ & -- & 1000 & 0.37 & 0.37 & 0.24 & 0.08 \\
+$SD(\phi_2)$ & -- & 1000 & 0.61 & 0.61 & 0.49 & 0.29 \\ \hline
 $E(\phi_3)$ & 1.61 & 0 & 1.72 & 1.83 & 1.33 & 1.40 \\
-$V(\phi_3)$ & -- & 2 & 0.026 & 0.045 & 0.069 & 0.056 \\
+$SD(\phi_3)$ & -- & 2 & 0.16 & 0.21 & 0.26 & 0.24 \\ \hline
 $E(\phi_4)$ & 1.39 & 0 & 1.46 & 1.48 & 1.41 & 1.44 \\
-$V(\phi_4)$ & -- & 2 & 0.011 & 0.010 & 0.012 & 0.018 \\
+$SD(\phi_4)$ & -- & 2 & 0.10 & 0.10 & 0.11 & 0.13 \\ \hline
 $E(\phi_5)$ & 2.99 & 0 & 3.00 & 3.00 & 3.00 & 3.01 \\
-$V(\phi_5)$ & -- & 2 & 0.0001 & 0.0001 & 0.0001 & 0.0001 \\
-Time & -- & -- & 81 s & 61 s & 48 s & 60 s\\ 
+$SD(\phi_5)$ & -- & 2 & 0.010 & 0.010 & 0.010 & 0.010 \\ \hline
+Time (Serial) & -- & -- & 81 s & 61 s & 48 s & 60 s\\ 
+Time (Parallel) & -- & -- & 81 s & 12.2 s & 4.8 s & 2.4 s\\ 
+\hline
+\end{tabular}
+\label{table:nonlin}
+\end{table}
+
+\pagebreak
+\section{5. Exponential Model}
+\subsection{Formulation}
+Finally we try the hierarchical exponential model with eight local unknown parameters drawn from global unknown means and variances, as well as a global model variance:
+$$ \theta_p = \phi_p \hspace{30 pt} \tau_p = e^{\phi_{p+8}} \hspace{30 pt} \sigma = e^{\phi_{17}}$$
+$$ \log a_{pj} \sim N(\theta_p, \tau_p)$$
+$$ x_{ij} \sim U(0,50)$$
+$$ \epsilon_{ij} \sim N(0, \sigma)$$
+$$ y_{ij} \sim + \epsilon_{ij} $$
+
+Generating 50 groups of $a_{pj}$'s from $\phi_{1:8} = \{ 5.89, 1.31, 0.77, 6.47, 1.69, -0.68, 3.9, 1.95\}$, $\phi_{9:16} = \{-1.07, -0.63, -0.25, -0.60, -0.69, -1.49, -1.24, -1.83\}$, and $\phi_{17} = 5.3$, we then sampled 100 data points from each group $j$.
+
+\subsection{Results}
+EP and HMC converge to same posterior of $\phi$ for a small number of sites. When using 25 sites, however, the posterior variance is quite larger.
+
+\begin{table}[ht]
+\caption{Posterior of $\phi$}
+\centering
+\begin{tabular}{c c c c c c c }
+\hline
+Parameter & True & Prior & HMC & EP K=5 & EP K=10 & EP K=25 \\ [0.5ex] % inserts table %heading
+\hline \\
+$E(\phi_1)$ & 5.89 & 5.89 & 6.05 & 5.67 & 5.73 & 5.53 \\
+$SD(\phi_1)$ & -- & 0.71 & 0.13 & 0.102 & 0.118 & 0.122 \\ \hline
+$E(\phi_2)$ & 1.31 & 1.31 & 1.50 & 1.20 & 1.19 & 1.20 \\
+$SD(\phi_2)$ & -- & 0.71 & 0.17 & 0.123 & 0.121 & 0.098 \\ \hline
+$E(\phi_3)$ & 0.77 & 0.77 & 0.69 & 0.74 & 0.96 & 0.98 \\
+$SD(\phi_3)$ & -- & 0.71 & 0.18 & 0.097 & 0.105 & 0.095 \\ \hline
+$E(\phi_4)$ & 6.47 & 6.47 & 7.37 & 6.81 & 6.65 & 6.75 \\
+$SD(\phi_4)$ & -- & 0.71 & 0.18 & 0.105 & 0.108 & 0.095 \\ \hline
+$E(\phi_5)$ & 1.69 & 1.69 & 0.72 & 1.44 & 1.44 & 1.57 \\
+$SD(\phi_5)$ & -- & 0.71 & 0.19 & 0.10 & 0.101 & 0.094 \\ \hline
+$E(\phi_6)$ & -0.68 & -0.68 & -1.21 & -1.00 & -0.56 & -0.92 \\
+$SD(\phi_6)$ & -- & 0.71 & 0.41 & 0.095 & 0.066 & 0.15 \\ \hline
+$E(\phi_7)$ & 3.90 & 3.90 & 1.76 & 4.01 & 3.93 & 3.93 \\
+$SD(\phi_7)$ & -- & 0.71 & 0.99 & 0.060 & 0.088 & 0.105 \\ \hline
+$E(\phi_8)$ & 1.95 & 1.95 & 1.34 & 2.05 & 2.22 & 1.95 \\
+$SD(\phi_8)$ & -- & 0.71 & 0.40 & 0.083 & 0.136 & 0.179 \\ \hline
+Time (Serial) & -- & -- & 908 s & 1300 s & 1350 s & 1170 s\\ 
+Time (Parallel) & -- & -- & 908 s & 260 s & 135 s & 47 s\\ 
 \hline
 \end{tabular}
 \label{table:nonlin}

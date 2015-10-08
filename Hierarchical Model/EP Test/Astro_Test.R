@@ -42,5 +42,5 @@ astro_EP_fit_25
 data <- list(N = N * J, B = J, x = astro_data$x, y = astro_data$y, bin = astro_data$bin, Mu_Cav = pri_mu, Sig_Cav = pri_sig);
 system.time(astro_MC_fit <- sampling(astro_fit, data = data, iter = 100, chains = 4, init_data = init_data));
 colMeans(extract(astro_MC_fit)$phi)
-apply(extract(astro_MC_fit)$phi, 2, var)
+apply(extract(astro_MC_fit)$phi, 2, sd)
 

@@ -30,13 +30,5 @@ model3_EP_fit_10
 data <- list(N = N * J, B = J, x = sub_data3$x, y = sub_data3$y, bin = sub_data3$bin, Mu_Cav = pri_mu, Sig_Cav = pri_sig);
 system.time(model3_MC_fit <- sampling(model3_fit, data = data, iter = 1000, chains = 4, init_data = init_data));
 model3_MC_fit
-mean(extract(model3_MC_fit)$phi[,1])
-var(extract(model3_MC_fit)$phi[,1])
-mean(extract(model3_MC_fit)$phi[,2])
-var(extract(model3_MC_fit)$phi[,2])
-mean(extract(model3_MC_fit)$phi[,3])
-var(extract(model3_MC_fit)$phi[,3])
-mean(extract(model3_MC_fit)$phi[,4])
-var(extract(model3_MC_fit)$phi[,4])
-mean(extract(model3_MC_fit)$phi[,5])
-var(extract(model3_MC_fit)$phi[,5])
+colMeans(extract(model3_MC_fit)$phi)
+apply(extract(model3_MC_fit)$phi, 2, sd)
