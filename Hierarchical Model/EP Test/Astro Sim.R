@@ -6,9 +6,6 @@ astro_sim <- function(phi = log(c(200, 2.5, 2.5, 250, 5, .5, 50, 7)), J = 360, n
   
   for(i in 1:8){
     mu_log_a[i] <- phi[i];
-  }
-  
-  for(i in 1:8){
     tau_log_a[i] <- exp(phi[i + 8]);
   }
   

@@ -188,7 +188,7 @@ $$ \theta_p = \phi_p \hspace{30 pt} \tau_p = e^{\phi_{p+8}} \hspace{30 pt} \sigm
 $$ \log a_{pj} \sim N(\theta_p, \tau_p)$$
 $$ x_{ij} \sim U(0,50)$$
 $$ \epsilon_{ij} \sim N(0, \sigma)$$
-$$ y_{ij} \sim + \epsilon_{ij} $$
+$$ y_{ij} = a_{1j} + \text{logit}^{-1} \biggl(\frac{x_{ij} - a_{2j}}{a_{3j}}\biggr) \biggl( a_{4j} \cdot a_{5j} \cdot \biggl(1 - e^{-\frac{x_{ij}}{a_{5j}}} \biggr) - a_{6j} \cdot e^{-\frac{1}{2}\biggl(\frac{x_{ij} - a_{7j}}{a_{8j}}\biggr)^2} \biggr) + \epsilon_{ij} $$
 
 Generating 50 groups of $a_{pj}$'s from $\phi_{1:8} = \{ 5.89, 1.31, 0.77, 6.47, 1.69, -0.68, 3.9, 1.95\}$, $\phi_{9:16} = \{-1.07, -0.63, -0.25, -0.60, -0.69, -1.49, -1.24, -1.83\}$, and $\phi_{17} = 5.3$, we then sampled 100 data points from each group $j$.
 
