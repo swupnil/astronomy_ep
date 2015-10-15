@@ -143,15 +143,55 @@ $Cov(\phi_1,\phi_2)$ & -- & 0 & -0.0041 & -0.0131 & -0.0335 & 0.0145 \\
 \end{table}
 
 \pagebreak
-\section{4. Slope and Intercept ( + Hierarchical Mean and Variance for Slope and Intercept)}
+\section{4. Hierarchical Linear Model}
 \subsection{Formulation}
 Now we try a hierarchical linear model with local unknown slopes and intercepts drawn from global unknown slope/intercept mean and variance, as well as a global model variance:
-$$ \alpha_j \sim N(\phi_1, e^{\phi_3})$$
-$$ \beta_j \sim N(\phi_2, e^{\phi_4})$$
-$$ x_{ij} \sim U(0,50)$$
-$$ y_{ij} \sim N(\alpha_j + \beta_j x_{ij}, e^{\phi_5}) $$
+$$ \alpha_j \sim N(\phi_1, e^{\phi_4}) \hspace{20 pt} \beta_j \sim N(\phi_2, e^{\phi_5}) \hspace{20 pt} \sigma_j \sim N(\phi_3, e^{\phi_6})$$
+$$ x_{ij} \sim U(0,50) \hspace{20 pt} \epsilon_{ij} \sim N(0,1)$$
+$$ y_{ij} = \alpha_j + \beta_j x_{ij} + \sigma_j \epsilon_{ij} $$
 
-Generating 50 $\alpha_j$ and $\beta_j$'s from $\phi_1 = -100, \phi_2 = 10, e^{\phi_3} = 5, e^{\phi_4} = 4,$ and $e^{\phi_5} = 20$, we then sampling 100 data points from each group $j$.
+Generating 50 $\alpha_j$, $\beta_j$, and $\sigma_j$'s from $\phi = \{100, 20, \log 20, \log 1, \log 1.5, \log 0.5\}$, we then sampled 100 data points from each group $j$.
+
+\subsection{Results}
+EP and HMC converge to same posterior of $\phi$ for a small number of sites. 
+
+\begin{table}[ht]
+\caption{Posterior of $\phi$}
+\centering
+\begin{tabular}{c c c c c c c }
+\hline
+Parameter & True & Prior & HMC & EP K=5 & EP K=10 \\ [0.5ex] % inserts table %heading
+\hline \\
+$E(\phi_1)$ & 100 & 0 & 100.3 & 100.3 & 100.3 \\
+$SD(\phi_1)$ & -- & 31.6 & 0.51 & 0.53 & 0.52 \\ \hline
+$E(\phi_2)$ & 20 & 0 & 19.8 & 19.8 & 19.76 \\
+$SD(\phi_2)$ & -- & 31.6 & 0.19 & 0.20 & 0.21 \\ \hline
+$E(\phi_3)$ & 3 & 0 & 3.01 & 2.98 & 3.01 \\
+$SD(\phi_3)$ & -- & 1.41 & 0.07 & 0.08 & 0.10 \\ \hline
+$E(\phi_4)$ & 0 & 0 & -0.03 & -0.025 & -0.24 \\
+$SD(\phi_4)$ & -- & 0.71 & 0.54 & 0.45 & 0.46 \\ \hline
+$E(\phi_5)$ & 0.41 & 0 & 0.27 & 0.32 & 0.39 \\
+$SD(\phi_5)$ & -- & 0.71 & 0.10 & 0.11 & 0.11 \\ \hline
+$E(\phi_6)$ & -0.69 & 0 & -0.59 & -0.61 & -0.65 \\
+$SD(\phi_6)$ & -- & 0.71 & 0.11 & 0.12 & 0.14 \\ \hline
+Time (Serial) & -- & -- & 535 s & 680 s & 680 s \\ 
+Time (Parallel) & -- & -- & 535 s & 136 s & 68 s \\ 
+\hline
+\end{tabular}
+\label{table:nonlin}
+\end{table}
+
+\pagebreak
+\section{5. Inverse Logistic Model}
+\subsection{Formulation}
+We next try a hierarchical inverse logistic model with five local unknown parameters drawn from global unknown means and variances:
+$$ \theta_p = \phi_p \hspace{30 pt} \tau_p = e^{\phi_{p+5}}$$
+$$ \log a_{pj} \sim N(\theta_p, \tau_p)$$
+$$ x_{ij} \sim U(0,50)$$
+$$ \epsilon_{ij} \sim N(0, 1)$$
+$$ y_{ij} = a_{1j} + \text{logit}^{-1} \biggl(\frac{x_{ij} - a_{2j}}{a_{3j}}\biggr) \cdot a_{4j} + a_{5j} \epsilon_{ij} $$
+
+Generating 50 groups of $a_{pj}$'s from $\phi_{1:5} = \{ 5.89, 2.30, 0.69, 6.48, 2\}$ and $\phi_{6:10} = \{-1.07, -0.69, -0.69, -0.60, 0.0001\}$, we then sampled 500 data points from each group $j$.
 
 \subsection{Results}
 EP and HMC converge to same posterior of $\phi$ for a small number of sites. When using 25 sites, however, the posterior variance is quite larger.
@@ -163,25 +203,26 @@ EP and HMC converge to same posterior of $\phi$ for a small number of sites. Whe
 \hline
 Parameter & True & Prior & HMC & EP K=5 & EP K=10 & EP K=25 \\ [0.5ex] % inserts table %heading
 \hline \\
-$E(\phi_1)$ & -100 & 0 & -98.7 & -99.2 & -99.3 & -99.2 \\
-$SD(\phi_1)$ & -- & 1000 & 0.98 & 0.80 & 0.79 & 1.26 \\ \hline
-$E(\phi_2)$ & 10 & 0 & 9.64 & 9.49 & 9.54 & 10.18 \\
-$SD(\phi_2)$ & -- & 1000 & 0.61 & 0.61 & 0.49 & 0.29 \\ \hline
-$E(\phi_3)$ & 1.61 & 0 & 1.72 & 1.83 & 1.33 & 1.40 \\
-$SD(\phi_3)$ & -- & 2 & 0.16 & 0.21 & 0.26 & 0.24 \\ \hline
-$E(\phi_4)$ & 1.39 & 0 & 1.46 & 1.48 & 1.41 & 1.44 \\
-$SD(\phi_4)$ & -- & 2 & 0.10 & 0.10 & 0.11 & 0.13 \\ \hline
-$E(\phi_5)$ & 2.99 & 0 & 3.00 & 3.00 & 3.00 & 3.01 \\
-$SD(\phi_5)$ & -- & 2 & 0.010 & 0.010 & 0.010 & 0.010 \\ \hline
-Time (Serial) & -- & -- & 81 s & 61 s & 48 s & 60 s\\ 
-Time (Parallel) & -- & -- & 81 s & 12.2 s & 4.8 s & 2.4 s\\ 
+$E(\phi_1)$ & 5.63 & 5.89 & 6.05 & 5.67 & 5.73 & 5.53 \\
+$SD(\phi_1)$ & -- & 0.71 & 0.13 & 0.102 & 0.118 & 0.122 \\ \hline
+$E(\phi_2)$ & 2.59 & 2.30 & 1.50 & 1.20 & 1.19 & 1.20 \\
+$SD(\phi_2)$ & -- & 0.71 & 0.17 & 0.123 & 0.121 & 0.098 \\ \hline
+$E(\phi_3)$ & 0.48 & 0.69 & 0.69 & 0.74 & 0.96 & 0.98 \\
+$SD(\phi_3)$ & -- & 0.71 & 0.18 & 0.097 & 0.105 & 0.095 \\ \hline
+$E(\phi_4)$ & 6.32 & 6.48 & 7.37 & 6.81 & 6.65 & 6.75 \\
+$SD(\phi_4)$ & -- & 0.71 & 0.18 & 0.105 & 0.108 & 0.095 \\ \hline
+$E(\phi_5)$ & 2.46 & 2.08 & 0.72 & 1.44 & 1.44 & 1.57 \\
+$SD(\phi_5)$ & -- & 0.71 & 0.19 & 0.10 & 0.101 & 0.094 \\ \hline
+Time (Serial) & -- & -- & 908 s & 1300 s & 1350 s & 1170 s\\ 
+Time (Parallel) & -- & -- & 908 s & 260 s & 135 s & 47 s\\ 
 \hline
 \end{tabular}
 \label{table:nonlin}
 \end{table}
 
+
 \pagebreak
-\section{5. Exponential Model}
+\section{8. Exponential Model}
 \subsection{Formulation}
 Finally we try the hierarchical exponential model with eight local unknown parameters drawn from global unknown means and variances, as well as a global model variance:
 $$ \theta_p = \phi_p \hspace{30 pt} \tau_p = e^{\phi_{p+8}} \hspace{30 pt} \sigma = e^{\phi_{17}}$$
