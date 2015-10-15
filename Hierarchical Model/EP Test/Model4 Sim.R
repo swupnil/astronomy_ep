@@ -2,17 +2,18 @@
 model4_sim <- function(pri_mu = log(c(200, 2.5, 2.5)), pri_sig = c(0.5,0.5,0.5),  J = 360, n.samp = 20){
   x <- y <- bin <- c();
   
-  phi <- pri_mu + rnorm(10, 0, 1) * diag(pri_sig);
-  mu_log_a <- phi[1:5];
-  tau_log_a <- exp(phi[6:10]);
+  phi <- pri_mu + rnorm(10, 0, 1) * sqrt(diag(pri_sig));
+  mu_a <- phi[1:5];
+  tau_a <- exp(phi[6:10]);
   
   print(phi)
   
   for(j in 1:J){
-    a_j <- exp(mu_log_a + rnorm(5, 0, 1) * tau_log_a);
+    a_j <- mu_a[1:4] + rnorm(4, 0, 1) * tau_a[1:4];
+    sd_j <- exp(mu_a[5] + rnorm(1, 0, 1) * tau_a[5]);
     
     x_j <- runif(n.samp, 0, 50);
-    y_j <- logit_curve(x_j, a_j) + rnorm(n.samp, 0, 1) * a_j[5];
+    y_j <- logit_curve(x_j, a_j) + rnorm(n.samp, 0, 1) * sd_j;
     
     x <- c(x, x_j);
     y <- c(y, y_j);

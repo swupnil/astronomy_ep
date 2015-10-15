@@ -182,16 +182,15 @@ Time (Parallel) & -- & -- & 535 s & 136 s & 68 s \\
 \end{table}
 
 \pagebreak
-\section{5. Inverse Logistic Model}
+\section{5. Hierarchical Inverse Logistic Model}
 \subsection{Formulation}
 We next try a hierarchical inverse logistic model with five local unknown parameters drawn from global unknown means and variances:
-$$ \theta_p = \phi_p \hspace{30 pt} \tau_p = e^{\phi_{p+5}}$$
-$$ \log a_{pj} \sim N(\theta_p, \tau_p)$$
-$$ x_{ij} \sim U(0,50)$$
-$$ \epsilon_{ij} \sim N(0, 1)$$
-$$ y_{ij} = a_{1j} + \text{logit}^{-1} \biggl(\frac{x_{ij} - a_{2j}}{a_{3j}}\biggr) \cdot a_{4j} + a_{5j} \epsilon_{ij} $$
+$$ a_{pj} \sim N(\phi_p, e^{\phi_{p+5}}) \hspace{10 pt} 
+\sigma_j = e^{a_{5j}}$$
+$$ x_{ij} \sim U(0,50) \hspace{10 pt} \epsilon_{ij} \sim N(0, 1)$$
+$$ y_{ij} = a_{1j} + \text{logit}^{-1} \biggl(\frac{x_{ij} - a_{2j}}{a_{3j}}\biggr) \cdot a_{4j} + \sigma_j \epsilon_{ij} $$
 
-Generating 50 groups of $a_{pj}$'s from $\phi_{1:5} = \{ 5.89, 2.30, 0.69, 6.48, 2\}$ and $\phi_{6:10} = \{-1.07, -0.69, -0.69, -0.60, 0.0001\}$, we then sampled 500 data points from each group $j$.
+Generating 50 groups of $a_{pj}$ and $\sigma_j$'s from a $\phi$ drawn from the prior shown below, we then sampled 100 data points from each group $j$.
 
 \subsection{Results}
 EP and HMC converge to same posterior of $\phi$ for a small number of sites. When using 25 sites, however, the posterior variance is quite larger.
@@ -199,22 +198,22 @@ EP and HMC converge to same posterior of $\phi$ for a small number of sites. Whe
 \begin{table}[ht]
 \caption{Posterior of $\phi$}
 \centering
-\begin{tabular}{c c c c c c c }
+\begin{tabular}{c c c c c c }
 \hline
-Parameter & True & Prior & HMC & EP K=5 & EP K=10 & EP K=25 \\ [0.5ex] % inserts table %heading
+Parameter & True & Prior & HMC & EP K=5 & EP K=10 \\ [0.5ex] % inserts table %heading
 \hline \\
-$E(\phi_1)$ & 5.63 & 5.89 & 6.05 & 5.67 & 5.73 & 5.53 \\
-$SD(\phi_1)$ & -- & 0.71 & 0.13 & 0.102 & 0.118 & 0.122 \\ \hline
-$E(\phi_2)$ & 2.59 & 2.30 & 1.50 & 1.20 & 1.19 & 1.20 \\
-$SD(\phi_2)$ & -- & 0.71 & 0.17 & 0.123 & 0.121 & 0.098 \\ \hline
-$E(\phi_3)$ & 0.48 & 0.69 & 0.69 & 0.74 & 0.96 & 0.98 \\
-$SD(\phi_3)$ & -- & 0.71 & 0.18 & 0.097 & 0.105 & 0.095 \\ \hline
-$E(\phi_4)$ & 6.32 & 6.48 & 7.37 & 6.81 & 6.65 & 6.75 \\
-$SD(\phi_4)$ & -- & 0.71 & 0.18 & 0.105 & 0.108 & 0.095 \\ \hline
-$E(\phi_5)$ & 2.46 & 2.08 & 0.72 & 1.44 & 1.44 & 1.57 \\
-$SD(\phi_5)$ & -- & 0.71 & 0.19 & 0.10 & 0.101 & 0.094 \\ \hline
-Time (Serial) & -- & -- & 908 s & 1300 s & 1350 s & 1170 s\\ 
-Time (Parallel) & -- & -- & 908 s & 260 s & 135 s & 47 s\\ 
+$E(\phi_1)$ & 395 & 361 & 391 & 359 & 5.73 \\
+$SD(\phi_1)$ & -- & 22.4 & 8.65 & 2.69 & 0.118 \\ \hline
+$E(\phi_2)$ & 9.20 & 10 & 8.99 & 11.1 & 1.19 \\
+$SD(\phi_2)$ & -- & 3.16 & 0.87 & 0.62 & 0.121 \\ \hline
+$E(\phi_3)$ & 2.22 & 2 & 2.17 & 1.96 & 0.96 \\
+$SD(\phi_3)$ & -- & 0.32 & 0.18 & 0.14 & 0.105 \\ \hline
+$E(\phi_4)$ & 664 & 650 & 656 & 652 & 6.65 \\
+$SD(\phi_4)$ & -- & 22.4 & 18.7 & 3.32 & 0.108 \\ \hline
+$E(\phi_5)$ & 2.10 & 2.08 & 1.97 & 2.22 & 1.44 \\
+$SD(\phi_5)$ & -- & 0.71 & 0.13 & 0.16 & 0.101 \\ \hline
+Time (Serial) & -- & -- & 1436 s & 100 s & 1350 s \\ 
+Time (Parallel) & -- & -- & 1436 s & 20 s & 135 s \\ 
 \hline
 \end{tabular}
 \label{table:nonlin}

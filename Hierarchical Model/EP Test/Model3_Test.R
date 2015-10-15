@@ -7,7 +7,7 @@ model3_fit <- stan_model(model_code = model3_code, model_name = "Model 3");
 J = 50;
 N = 100;
 sub_data3 <- model3_sim(phi = c(100, 20, log(20), log(1), log(1.5), log(.5)), J = J, n.samp = N);
-plot(sub_data3$x, sub_data3$y)
+plot(sub_data3$x, sub_data3$y);
 
 #  ..... Priors .....
 pri_mu <- rep(0, 6);

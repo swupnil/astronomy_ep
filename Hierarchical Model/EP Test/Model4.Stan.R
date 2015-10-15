@@ -16,19 +16,19 @@ model4_code = '
   }
 
   parameters{
-    matrix[5,B] eta;
     vector[10] phi;
+    matrix[5,B] eta;
   }
 
   transformed parameters{
-    matrix[5,B] log_a;
-    matrix[5,B] a;
+    matrix[4,B] a;
+    vector[B] log_sd;
 
     for(b in 1:B){
-      for(i in 1:5){
-        log_a[i,b] <- phi[i] + exp(phi[i + 5]) * eta[i,b];
-        a[i,b] <- exp(log_a[i,b]);
+      for(i in 1:4){
+        a[i,b] <- phi[i] + exp(phi[i + 5]) * eta[i,b];
       }
+      log_sd[b] <- phi[5] + exp(phi[10]) * eta[5,b];
     }
   }
 
@@ -46,7 +46,7 @@ model4_code = '
 
     for(n in 1:N){
       y_hat[n] <- a[1,bin[n]] + inv_logit( (x[n] - a[2,bin[n]]) / a[3,bin[n]] ) * a[4,bin[n]]; 
-      sigma_hat[n] <- a[5,bin[n]];
+      sigma_hat[n] <- exp(log_sd[bin[n]]);
     }
 
     y ~ normal(y_hat, sigma_hat);
